@@ -20,6 +20,7 @@ def generate_label():
     for dirname in dirs:
         ins = get_instrument_name(dirname)
         labels[ins] = count
+        samples[ins] = 0
         count += 1
     return labels
 
@@ -80,6 +81,8 @@ def extract_feature():
         feature = aver.reshape(20)
         # print(feature)
 
+        samples[get_instrument_name(filename)] += 1
+
         label = detect_label(filename)
         curline = [" ".join(str(num) for num in feature), label]
         data.append(curline)
@@ -92,6 +95,8 @@ def extract_feature():
     with open(dataFileName, 'w', newline='') as csvfile:
         datawriter = csv.writer(csvfile)
         datawriter.writerows(data)
+    print(samples)
+    print(sum(samples.values()), "samples in total")
     return data
 
 if not os.path.isfile(dataFileName):
